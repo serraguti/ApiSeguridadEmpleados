@@ -1,4 +1,5 @@
 using ApiSeguridadEmpleados.Data;
+using ApiSeguridadEmpleados.Helpers;
 using ApiSeguridadEmpleados.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,11 @@ namespace ApiSeguridadEmpleados
             services.AddTransient<RepositoryEmpleados>();
             services.AddDbContext<EmpleadosContext>
                 (options => options.UseSqlServer(cadena));
+            //HABILITAMOS LA SEGURIDAD UTILIZANDO NUESTRA CLASE HELPER
+            HelperOAuthToken helper = new HelperOAuthToken(this.Configuration);
+            services.AddAuthentication(helper.GetAuthOptions())
+                .AddJwtBearer(helper.GetJwtOptions());
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -60,6 +66,7 @@ namespace ApiSeguridadEmpleados
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

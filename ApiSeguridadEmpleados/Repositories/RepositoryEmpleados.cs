@@ -35,5 +35,13 @@ namespace ApiSeguridadEmpleados.Repositories
                            select datos;
             return consulta.FirstOrDefault();
         }
+
+        public List<Empleado> GetCompisCurro(int iddepartamento)
+        {
+            var consulta = from datos in this.context.Empleados
+                           where datos.Departamento == iddepartamento
+                           select datos;
+            return consulta.ToList();
+        }
     }
 }
